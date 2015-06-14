@@ -93,7 +93,7 @@ int unlock_file(int fd, struct flock* fl){
 
 int open_with_lock_c(const char *filepath, int flags, mode_t mode, struct flock *lock, int lock_type){
 	int fd = -1;
-	//TODO Check if file exists
+
 	fprintf(stderr,"#%d %s Opening file\n", getpid(), filepath);
 	if((fd = TEMP_FAILURE_RETRY(open(filepath, flags, mode))) < 0) 
 		return OPEN_ERROR;
@@ -113,7 +113,6 @@ int open_with_lock_c(const char *filepath, int flags, mode_t mode, struct flock 
 
 int open_with_lock(const char *filepath, int flags, struct flock *lock, int lock_type){
 	int fd = -1;
-	//TODO Check if file exists
 	
 	fprintf(stderr,"#%d %s Opening file\n", getpid(), filepath);
 	fd = TEMP_FAILURE_RETRY(open(filepath, flags)); 
@@ -178,7 +177,6 @@ gameID read_game_id_line(int fd, gameID* out){
 void send_buf(int fd, char* msg_buffer, ssize_t buffer_size){
 	ssize_t size;	
 	if((size = bulk_write(fd,msg_buffer,buffer_size)) < buffer_size)
-		//TODO resolve broken connection
 		ERR("Sending msg:");
 }
 void send_msg(int fd, char buffer[MSG_SIZE]){

@@ -31,10 +31,10 @@ void read_games_list(int fd){
 	send_code(fd, LIST_GAMES_CODE);
 	while((code = recv_code(fd)) == SUCCESS_RESPONSE_CODE){
 		game_id = recv_game_id(fd);
-		fprintf(stdout, "[%d] %d \n", code, game_id);
+		fprintf(stdout, "%d \n", game_id);
 	}
-	fprintf(stderr,"[%d] end of list \n", code);
-	//TODO check last RESPONSE CODE if end of list
+	if(code != END_OF_LIST_CODE)
+		fprintf(stdout, "Error during reading the list. \n");		
 }
 
 void quit(int fd){

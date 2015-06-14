@@ -76,6 +76,29 @@ int player_is_in_game(const char nickname[NICK_SIZE], gameID game_id){
 	return fd;
 }
 
+void log_joining_game(gameID game_id, const char nickname[NICK_SIZE]){
+	int log_fd;
+	struct flock lock;
+	char file_path[SERVER_FILE_PATH_SIZE], log_line[GAME_LOG_LINE_SIZE];
+	
+	time_t t = time(NULL);
+	struct tm timeInfo = *localtime(&t);	
+	
+	snprintf(log_line, GAME_LOG_LINE_SIZE, "%02d.%02d.%04d %02d:%02d:%02d %s joins the game.\n", 
+		timeInfo.tm_mday, timeInfo.tm_mon+1, timeInfo.tm_year + 1900, 
+		timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec, nickname);
+	
+	set_gamelog_file_name(file_path, game_id);
+	log_fd = open_with_lock(file_path,O_WRONLY | O_APPEND, &lock, WRITE_LOCK);
+	if(log_fd > 0){
+		write_line(log_fd, log_line, GAME_LOG_LINE_SIZE);
+		unlock_with_close(log_fd, &lock);
+	}
+	else
+		ERR("log join");
+	
+	
+}
 
 void add_game_to_list(gameID game_id, const char nickname[NICK_SIZE]){
 	char player_file_name[SERVER_FILE_PATH_SIZE];
@@ -89,4 +112,6 @@ void add_game_to_list(gameID game_id, const char nickname[NICK_SIZE]){
 	player_fd = open_with_lock_c(player_file_name, O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH , &player_lock, WRITE_LOCK);
 	write_line(player_fd, buffer, 128);
 	unlock_with_close(player_fd, &player_lock);	
+	log_joining_game(game_id, nickname);
 }
+

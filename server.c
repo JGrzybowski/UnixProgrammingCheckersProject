@@ -44,8 +44,6 @@ int login(int clientFd, char nickname[NICK_SIZE]){
 	
 	strncpy(nickname, buffer, NICK_SIZE);
 	send_code(clientFd, SUCCESS_RESPONSE_CODE); 
-	//TODO Create file for new users!
-
 	return 0;
 }
 
@@ -79,7 +77,7 @@ void serve(int clientFd){
 			case QUIT_CODE:
 				exit(EXIT_SUCCESS);
 			default:
-				//TODO send WRONG_COMMAND_CODE				
+				send_code(clientFd, IMPROPER_COMMAND_CODE);				
 				ERR("Wrong Command Code:");
 		}
 	}

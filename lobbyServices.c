@@ -10,7 +10,6 @@ void connect_to_the_game(int clientFd, const char nickname[MSG_SIZE]){
 	if((i = player_is_in_game(nickname, game_id)) <= 0){
 		send_code(clientFd, WRONG_GAME_ID_RESPONSE_CODE);
 	}else{		
-		//TODO Check if game directory exists
 		send_code(clientFd, SUCCESS_RESPONSE_CODE);
 		//fprintf(stderr,"check %d\n",i);
 		game_loop(clientFd, game_id, nickname, i);
@@ -49,45 +48,38 @@ int create_new_game_files(gameID game_id, const char nickname[NICK_SIZE]){
 	
 	if(mkdir(file_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
 		fprintf(stderr, "#%d %s was created! \n", getpid(), file_name);
-		//TODO move to different functions!
+		
 		set_gamelog_file_name(file_name, game_id);
 		log_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &log_lock, WRITE_LOCK);	
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 		
 		set_status_file_name(file_name, game_id);
 		status_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &status_lock, WRITE_LOCK);
 		send_code(status_fd, AWAITING_FOR_OPPONENT);
 		//set_game_status(game_id, AWAITING_FOR_OPPONENT);
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 		
 		set_board_file_name(file_name, game_id);
 		board_fd = open_with_lock_c(file_name , O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &board_lock, WRITE_LOCK);
 		initialize_board(board_fd);	
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 	
 		set_msg_file_name(file_name, game_id, 1);
 		msg1_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &msg1_lock, WRITE_LOCK);
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 	
 		set_msg_file_name(file_name, game_id, 2);
 		msg2_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &msg2_lock, WRITE_LOCK);
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 	
 		set_players_file_name(file_name, game_id);
 		players_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &players_lock, WRITE_LOCK);
-		write_line(players_fd, nickname, NICK_SIZE);
-		//fprintf(stderr, "FDs %d %d %d %d %d %d \n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
-			
+					
 		add_game_to_list(game_id, nickname);
 		
 		fprintf(stderr, "Game %d files prepared, but still locked!\n", game_id);
-		fprintf(stderr, "FDs %d %d %d %d %d %d\n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
+		//fprintf(stderr, "FDs %d %d %d %d %d %d\n", players_fd, msg2_fd, msg1_fd, board_fd, status_fd, log_fd);
 	
 		unlock_with_close(players_fd, &players_lock);
 		unlock_with_close(msg2_fd, &msg2_lock);
@@ -117,26 +109,17 @@ void join_game(gameID game_id, const char nickname[NICK_SIZE]){
 	log_fd = open_with_lock(log_file_name, O_RDWR | O_APPEND, &log_lock, WRITE_LOCK);
 	status_fd = open_with_lock(status_file_name, O_RDWR, &status_lock, WRITE_LOCK);
 	players_fd = open_with_lock(players_file_name, O_RDWR | O_APPEND, &players_lock, WRITE_LOCK);
-	
-	//TODO log joining
-	
 	//set status P1_TURN
 	set_game_status(game_id, P1_TURN);
-	
 	//append nickname to players
 	write_line(players_fd, nickname, NICK_SIZE);
-	
-	//open player's game list file
-	//Append game to games list
+	//append game to games list
 	add_game_to_list(game_id, nickname);
-		
 	//unlock with close all files
 	unlock_with_close(log_fd, &log_lock);
 	unlock_with_close(status_fd, &status_lock);
-	unlock_with_close(players_fd, &players_lock);
-	
+	unlock_with_close(players_fd, &players_lock);	
 }
-
 
 gameID create_new_game(const char nickname[NICK_SIZE]){
 	char awaiting_game_file_name[SERVER_FILE_PATH_SIZE];
@@ -153,13 +136,12 @@ gameID create_new_game(const char nickname[NICK_SIZE]){
 	awa_game_fd = open_with_lock(awaiting_game_file_name, O_RDWR, &awa_game_lock, WRITE_LOCK);
 	awa_player_fd = open_with_lock(awaiting_player_file_name, O_RDWR, &awa_player_lock, WRITE_LOCK);
 	
-	//TODO
 	read_line(awa_game_fd, buffer, GAME_LOG_LINE_SIZE);
-	fprintf(stderr, "New game's id: %s\n", buffer);
+	//fprintf(stderr, "New game's id: %s\n", buffer);
 	parse_out_game_id(buffer, GAME_LOG_LINE_SIZE, &awaiting_game_id);
-	//awaiting_game_id = recv_game_id(awa_game_fd);
+	
 	read_line(awa_player_fd, game_creator, NICK_SIZE);
-	fprintf(stderr, "Awaiting player: !%s!\n", game_creator);
+	//fprintf(stderr, "Awaiting player: !%s!\n", game_creator);
 	
 	//CREATE NEW GAME
 	if (! ((game_creator[0] >= '0' && game_creator[0] <= '9') || 
@@ -211,7 +193,6 @@ void list_games(int clientFd, char nickname[NICK_SIZE]){
 	if((list_fd = open_with_lock(file_name,O_RDONLY, &lock, READ_LOCK)) < 0) ERR("Opening file:");
 	
 	//Lock file
-	//read_lock_file(list_fd, &lock);
 	while(read_game_id_line(list_fd, &game_id)){
 		fprintf(stderr,"#%d %d \n", getpid(), game_id);
 		send_code(clientFd, SUCCESS_RESPONSE_CODE);
@@ -219,9 +200,7 @@ void list_games(int clientFd, char nickname[NICK_SIZE]){
 	}
 	fprintf(stderr,"#%d End of list. \n", getpid());
 	send_code(clientFd, END_OF_LIST_CODE);
-	//Unlock file
-	//unlock_file(list_fd, &lock);
-	//Close file
+
 	if(unlock_with_close(list_fd, &lock) > 0) ERR("Closing player's games list file:");
 
 }

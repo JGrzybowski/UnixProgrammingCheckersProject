@@ -7,8 +7,6 @@
 #include "common.h"
 #include "filePaths.h"
 
-#define GAME_LOG_LINE_SIZE 128
-#define PATHSIZE 4096
 
 //Internal game statuses
 #define P1_TURN '1'

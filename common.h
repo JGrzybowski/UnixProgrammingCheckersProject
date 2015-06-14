@@ -31,6 +31,8 @@
 #define BOARD_SIZE 6
 #define ROWS_OF_PIECES 2
 
+#define GAME_LOG_LINE_SIZE 128
+
 #define MSG_SIZE 512
 #define DATE_SIZE 20
 #define MSG_TXT_SIZE MSG_SIZE-DATE_SIZE-1

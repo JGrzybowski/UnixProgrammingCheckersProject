@@ -10,7 +10,6 @@ void usage(char * name){
 	fprintf(stderr,"USAGE: %s domain port \n",name);
 }
 
-//TODO move to player helpers
 int is_valid_nickname(char nickname[NICK_SIZE]){
 	int i;
 	for(i=0;i<NICK_SIZE;i++){

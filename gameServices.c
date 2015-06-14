@@ -9,7 +9,7 @@ void print_to_log(const char nickname[NICK_SIZE], const char* message){
 //https://stackoverflow.com/questions/1442116/how-to-get-date-and-time-value-in-c-program
 
 void append_surrender_to_game_log(gameID game_id, const char nickname[NICK_SIZE], struct tm timeInfo){
-	char game_log_file_name[PATHSIZE] = {0};	
+	char game_log_file_name[SERVER_FILE_PATH_SIZE] = {0};	
 	char log_line[GAME_LOG_LINE_SIZE] = {0};
 	int fd; 
 	struct flock lock;
@@ -31,7 +31,7 @@ void append_surrender_to_game_log(gameID game_id, const char nickname[NICK_SIZE]
 }
 
 void append_move_to_game_log(gameID game_id, const char nickname[NICK_SIZE], unsigned char from, unsigned char to, int isBeating, struct tm timeInfo){
-	char game_log_file_name[PATHSIZE] = {0};	
+	char game_log_file_name[SERVER_FILE_PATH_SIZE] = {0};	
 	char log_line[GAME_LOG_LINE_SIZE] = {0};
 	int fd; 
 	struct flock lock;
@@ -79,7 +79,7 @@ int is_player_allowed_to_move(const char nickname[NICK_SIZE], gameID game_id){
 
 
 void set_game_status(gameID game_id, char status){
-	char file_name[PATHSIZE];
+	char file_name[SERVER_FILE_PATH_SIZE];
 	struct flock lock;
 	int fd;
 	
@@ -95,7 +95,7 @@ void set_game_status(gameID game_id, char status){
 
 char get_game_status(gameID game_id){
 	char status =-1;
-	char file_name[PATHSIZE];
+	char file_name[SERVER_FILE_PATH_SIZE];
 	struct flock lock;
 	int fd = -1;
 	
@@ -104,7 +104,6 @@ char get_game_status(gameID game_id){
 	fprintf(stderr,"#%d Comparing fd if  %d > 0 \n", getpid(), fd);
 	if(fd > 0){
 		//fprintf(stderr, "BEFORE read_line fd %d\n",fd);
-		//TODO Investigate!!
 		//read_line(fd, &status, sizeof(char));
 		status = recv_code(fd);
 		//fprintf(stderr, "AFTER read_line fd %d\n",fd);
@@ -130,8 +129,8 @@ void send_board(int clientFd, gameID game_id){
 		send_buf(clientFd, board, BOARD_SIZE * BOARD_SIZE);
 		unlock_with_close(fd,&lock);
 	}
-	//TODO replace -1
-	else send_code(clientFd, -1);
+	else 
+		send_code(clientFd, GENERIC_ERROR_CODE);
 }
 
 void send_status(int clientFd, gameID game_id){
@@ -232,8 +231,7 @@ void send_line_by_line(int clientFd, const char file_name[SERVER_FILE_PATH_SIZE]
 		unlock_with_close(fd,&lock);
 	}
 	else 
-		//TODO set err number
-		send_code(clientFd,-1);
+		send_code(clientFd, GENERIC_ERROR_CODE);
 }
 
 void send_logs(int clientFd, gameID game_id){
@@ -337,8 +335,7 @@ void save_message(int clientFd, gameID game_id, int player_nr){
 		send_code(clientFd, SUCCESS_RESPONSE_CODE);
 	}
 	else{
-		//TODO error code
-		send_code(clientFd, -1);
+		send_code(clientFd, MESSAGE_NOT_SAVED);
 	}
 }
 

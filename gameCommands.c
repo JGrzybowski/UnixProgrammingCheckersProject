@@ -103,7 +103,6 @@ void read_line_by_line(int fd){
 		fprintf(stdout,"%s\n",msg_buffer);
 	}
 	if(code != END_OF_LIST_CODE)
-		//TODO
 		fprintf(stdout,"Error during reading the list.\n");
 }
 
@@ -126,7 +125,6 @@ void make_move(int fd, const char command_buffer[COMMAND_LINE_SIZE]){
 	char code;
 	int matches, possibility;
 
-	//TODO fix scanning for moves
 	//fprintf(stdout, "#%s#\n", command_buffer);
 	if((matches= sscanf(command_buffer, "move %c%d %c%d", &from_row, &from_col, &to_row, &to_col)) < 4)
 		fprintf(stdout, "Wrong format of move. \n");
