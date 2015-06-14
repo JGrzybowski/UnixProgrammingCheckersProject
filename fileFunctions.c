@@ -148,7 +148,20 @@ int unlock_with_close(int fd, struct flock *lock){
 }
 //}
 
-gameID read_game_id_line(int fd, gameID* outint){
+//GAME ID READING AND PARSING{
+gameID parse_out_game_id(char* buffer, size_t buffer_size, gameID* out){
+	int matches = 0;	
+	if((matches = (sscanf(buffer, " %d ", out))) < 1){
+		if (matches == 0)
+			return 0;
+		else 
+			return -1;
+	}else 
+		return *out;
+}
+
+gameID read_game_id_line(int fd, gameID* out){
+	//TODO set buffer size
 	ssize_t size;
 	char buffer[150];	
 	
@@ -156,11 +169,10 @@ gameID read_game_id_line(int fd, gameID* outint){
 		ERR("read_id read_line:");
 	if(size == 0) 
 		return 0;
-	sscanf(buffer, " %d ", outint);
-	//TODO ERROR CHECK
+	return parse_out_game_id(buffer, 150, out);
 	//fprintf(stderr,"@read line: %s \n gameID: %d \n",buffer,*outint);
-	return *outint;
 }
+//}
 
 //SENDING MESSAGES{
 void send_buf(int fd, char* msg_buffer, ssize_t buffer_size){

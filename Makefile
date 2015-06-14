@@ -32,8 +32,8 @@ board.o: common.o fileFunctions.o board.c board.h
 
 gameServices.o:  fileFunctions.o gameServices.c gameServices.h 
 	${CC} -o gameServices.o -c gameServices.c fileFunctions.o  ${C_FLAGS} ${L_FLAGS}
-playerServices.o: fileFunctions.o playerServices.c playerServices.h
-	${CC} -o playerServices.o -c playerServices.c fileFunctions.o ${C_FLAGS} ${L_FLAGS}
+playerServices.o: filePaths.o fileFunctions.o playerServices.c playerServices.h
+	${CC} -o playerServices.o -c playerServices.c fileFunctions.o filePaths.o ${C_FLAGS} ${L_FLAGS}
 lobbyServices.o: fileFunctions.o lobbyServices.c gameServices.o lobbyServices.h
 	${CC} -o lobbyServices.o -c lobbyServices.c fileFunctions.o gameServices.o ${C_FLAGS} ${L_FLAGS}
 filePaths.o: common.o

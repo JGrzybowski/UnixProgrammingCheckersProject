@@ -124,11 +124,13 @@ void make_move(int fd, const char command_buffer[COMMAND_LINE_SIZE]){
 	position_t from;
 	position_t to;
 	char code;
-	int possibility;
+	int matches, possibility;
 
 	//TODO fix scanning for moves
 	//fprintf(stdout, "#%s#\n", command_buffer);
-	sscanf(command_buffer, "move %c%d %c%d", &from_row, &from_col, &to_row, &to_col);
+	if((matches= sscanf(command_buffer, "move %c%d %c%d", &from_row, &from_col, &to_row, &to_col)) < 4)
+		fprintf(stdout, "Wrong format of move. \n");
+	
 	//fprintf(stdout,"Move %c,%d -> %c,%d \n", from_row, from_col, to_row, to_col);
 	
 	if(from_col==-1 || from_row==-1 || to_col==-1 || to_row==-1){

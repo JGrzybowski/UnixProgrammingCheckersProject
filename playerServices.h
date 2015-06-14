@@ -1,5 +1,6 @@
 #include "common.h"
 #include "fileFunctions.h"
+#include "filePaths.h"
 
 #ifndef UNIX_PROJECT_PLAYER_HELPERS
 #define UNIX_PROJECT_PLAYER_HELPERS

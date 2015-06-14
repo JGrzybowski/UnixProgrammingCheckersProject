@@ -33,18 +33,18 @@ void usage(char * name){
 }
 
 int login(int clientFd, char nickname[NICK_SIZE]){
+	char code;
 	char buffer[NICK_SIZE] = {0};	
-	if(bulk_read(clientFd, buffer, CODE_SIZE) < CODE_SIZE ) ERR("Reading nickname command:");
-	if(buffer[0] != LOG_IN_CODE) { 
+	
+	if((code = recv_code(clientFd)) != LOG_IN_CODE){
 		send_code(clientFd, IMPROPER_COMMAND_CODE); 
-		return -1;
+		return IMPROPER_COMMAND_CODE;
 	}
 	if(bulk_read(clientFd, buffer, NICK_SIZE) < NICK_SIZE ) ERR("Reading nickname:");
 	
 	strncpy(nickname, buffer, NICK_SIZE);
 	send_code(clientFd, SUCCESS_RESPONSE_CODE); 
 	//TODO Create file for new users!
-
 
 	return 0;
 }

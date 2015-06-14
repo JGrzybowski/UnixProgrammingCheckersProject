@@ -156,7 +156,7 @@ gameID create_new_game(const char nickname[NICK_SIZE]){
 	//TODO
 	read_line(awa_game_fd, buffer, GAME_LOG_LINE_SIZE);
 	fprintf(stderr, "New game's id: %s\n", buffer);
-	sscanf(buffer, "%d", &awaiting_game_id);
+	parse_out_game_id(buffer, GAME_LOG_LINE_SIZE, &awaiting_game_id);
 	//awaiting_game_id = recv_game_id(awa_game_fd);
 	read_line(awa_player_fd, game_creator, NICK_SIZE);
 	fprintf(stderr, "Awaiting player: !%s!\n", game_creator);

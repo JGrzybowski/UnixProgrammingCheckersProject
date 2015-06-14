@@ -26,7 +26,9 @@ int unlock_with_close(int fd, struct flock *lock);
 int write_lock_file(int fd, struct flock* fl);
 int read_lock_file(int fd, struct flock* fl);
 int unlock_file(int fd, struct flock* fl);
-gameID read_game_id_line(int fd, int* outint);
+
+gameID parse_out_game_id(char* buffer, size_t buffer_size, gameID* out);
+gameID read_game_id_line(int fd, gameID* out);
 
 #endif
 

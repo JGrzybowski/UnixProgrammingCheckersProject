@@ -66,7 +66,7 @@ void lobby_menu(int fd, char nickname[NICK_SIZE]){
 		//CONNECT
 		}else if((command_place = strstr(command_buffer,CONNECT_GAME_COMMAND)) == command_buffer){
 			send_code(fd, CONNECT_CODE);
-			sscanf(command_buffer+7," %d ", &game_id);
+			parse_out_game_id(command_buffer+7, sizeof(command_buffer) - sizeof(CONNECT_GAME_COMMAND) +1, &game_id);
 			send_game_id(fd, game_id);
 			fprintf(stdout, "Connecting to %d...\n", game_id);
 			if(recv_code(fd) == SUCCESS_RESPONSE_CODE){
