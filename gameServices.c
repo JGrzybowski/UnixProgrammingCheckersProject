@@ -20,7 +20,7 @@ void append_surrender_to_game_log(gameID game_id, const char nickname[NICK_SIZE]
 	if(fd < 0) 
 		ERR("Opening game log file:");
  	//Generate line for the log and write it in the file and console.
-	snprintf(log_line, sizeof(log_line), "%02d.%02d.%04d %02d:%02d:%02d %s surrenders!\n", 
+	snprintf(log_line, GAME_LOG_LINE_SIZE, "%02d.%02d.%04d %02d:%02d:%02d %s surrenders!\n", 
 			timeInfo.tm_mday, timeInfo.tm_mon+1, timeInfo.tm_year + 1900, 
 			timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec, nickname);
 		
@@ -43,7 +43,7 @@ void append_move_to_game_log(gameID game_id, const char nickname[NICK_SIZE], uns
 	if(fd < 0) 
 		ERR("Opening game log file:");
 	//Generate line for the log and write it in the file and console.
-	snprintf(log_line, sizeof(log_line), "%02d.%02d.%04d %02d:%02d:%02d %s %c%c %c> %c%c\n", 
+	snprintf(log_line, GAME_LOG_LINE_SIZE, "%02d.%02d.%04d %02d:%02d:%02d %s %c%c %c> %c%c\n", 
 			timeInfo.tm_mday, timeInfo.tm_mon+1, timeInfo.tm_year + 1900, 
 			timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec, 
 			nickname,
@@ -323,7 +323,7 @@ void save_message(int clientFd, gameID game_id, int player_nr){
 	
 	fd = open_with_lock(msg_file_name, O_WRONLY | O_APPEND, &lock, WRITE_LOCK);
 	if(fd > 0){
-		snprintf(message, size_of(message), "%02d.%02d.%04d %02d:%02d:%02d ", 
+		snprintf(message, SERVER_FILE_PATH_SIZE, "%02d.%02d.%04d %02d:%02d:%02d ", 
 				timeInfo.tm_mday, timeInfo.tm_mon+1, timeInfo.tm_year + 1900, 
 				timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec);
 		

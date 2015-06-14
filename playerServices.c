@@ -84,9 +84,9 @@ void add_game_to_list(gameID game_id, const char nickname[NICK_SIZE]){
 	//TODO fix buffer size
 	char buffer[128];
 	
-	snprintf(buffer, sizeof(buffer), "%d", game_id);
+	snprintf(buffer, 128, "%d", game_id);
 	set_players_games_file_name(player_file_name, nickname);
 	player_fd = open_with_lock_c(player_file_name, O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH , &player_lock, WRITE_LOCK);
-	write_line(player_fd, buffer, sizeof(buffer));
+	write_line(player_fd, buffer, 128);
 	unlock_with_close(player_fd, &player_lock);	
 }
