@@ -45,7 +45,7 @@ int create_new_game_files(gameID game_id, const char nickname[NICK_SIZE]){
 	struct flock log_lock, board_lock, players_lock, status_lock, msg1_lock, msg2_lock;
 	char file_name[SERVER_FILE_PATH_SIZE];
 	
-	snprintf(file_name, SERVER_FILE_PATH_SIZE, "games/%d", game_id);
+	snprintf(file_name, sizeof(file_name), "games/%d", game_id);
 	
 	if(mkdir(file_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
 		fprintf(stderr, "#%d %s was created! \n", getpid(), file_name);
@@ -176,7 +176,7 @@ gameID create_new_game(const char nickname[NICK_SIZE]){
 		
 		if(ftruncate(awa_game_fd, 0) < 0) ERR("ftruncate:");
 		if(lseek(awa_game_fd, 0, SEEK_SET) < 0) ERR("lseek:");
-		snprintf(buffer, GAME_LOG_LINE_SIZE, "%d", awaiting_game_id+1);
+		snprintf(buffer, sizeof(buffer), "%d", awaiting_game_id+1);
 		write_line(awa_game_fd, buffer, GAME_LOG_LINE_SIZE);
 		
 		if(ftruncate(awa_player_fd, 0) < 0) ERR("ftruncate:");

@@ -39,7 +39,8 @@ lobbyServices.o: fileFunctions.o lobbyServices.c gameServices.o lobbyServices.h
 filePaths.o: common.o
 	${CC} -o filePaths.o -c filePaths.c common.o ${C_FLAGS} ${L_FLAGS}
 	
-lobbyCommands.o: lobbyCommands.h lobbyCommands.c ${COMMON_FILES}
+lobbyCommands.o: lobbyCommands.hvirtual2box
+ lobbyCommands.c ${COMMON_FILES}
 	${CC} -o lobbyCommands.o -c lobbyCommands.c common.o  fileFunctions.o board.o ${C_FLAGS} ${L_FLAGS}
 gameCommands.o : gameCommands.h gameCommands.c common.o fileFunctions.o board.o clientGameRules.o
 	${CC} -o gameCommands.o -c gameCommands.c common.o  fileFunctions.o board.o ${C_FLAGS} ${L_FLAGS}

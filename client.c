@@ -35,7 +35,7 @@ int login(int fd, char nickname[NICK_SIZE]){
 	//Read the player's nickname
 	do{
 		fprintf(stdout,"Put your nickname (max. %d alphanumerical characters only): ", NICK_SIZE);
-		fgets(nickname, NICK_SIZE, stdin);
+		read_line(nickname, NICK_SIZE, stdin);
 	}while(is_valid_nickname(nickname)==-1);
 	//Send the messsage
 	send_code(fd, LOG_IN_CODE); 
