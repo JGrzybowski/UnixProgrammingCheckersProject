@@ -75,6 +75,7 @@ int create_new_game_files(gameID game_id, const char nickname[NICK_SIZE]){
 		set_players_file_name(file_name, game_id);
 		players_fd = open_with_lock_c(file_name, O_RDWR | O_CREAT, 
 					S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH, &players_lock, WRITE_LOCK);
+		write_line(players_fd, nickname, NICK_SIZE);
 					
 		add_game_to_list(game_id, nickname);
 		
