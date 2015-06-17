@@ -11,12 +11,14 @@ CLIENT_NAME = bin/checkers_client
 
 
 all: server client
-install: server client init
+install: init server client
 init: 
-	mkdir games
-	mkdir players
-	touch .awaiting_game
-	touch .awaiting_player
+	mkdir bin
+	mkdir bin/games
+	mkdir bin/players
+	touch bin/awaiting_game
+	echo "1" > bin/awaiting_game
+	touch bin/awaiting_player
 
 server: ${SERVER_FILES} ${COMMON_FILES}
 	${CC} -o ${SERVER_NAME} ${SERVER_FILES} ${COMMON_FILES} ${C_FLAGS} ${L_FLAGS}

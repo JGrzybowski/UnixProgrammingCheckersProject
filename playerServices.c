@@ -4,7 +4,7 @@
  * Function: is_valid_nickname
  * ----------------------------
  * Checks is given c string is a proper nickname and doesn't contain andy special characters.
- *	
+ * Removes breakline charakter if present and replaces it with zero character.
  *	nickname: validated nickname
  *	
  *	returns:	 0  if passed string is a proper nickname
